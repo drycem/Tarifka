@@ -1,7 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Text, SafeAreaView} from 'react-native';
+import {
+  FlatList,
+  Text,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
-export default function Home() {
+export default function Home({navigation}) {
   const [data, setData] = useState(null);
 
   const fetchCategories = async () => {
@@ -16,11 +21,19 @@ export default function Home() {
     fetchCategories();
   }, []);
 
-  const renderRecipe = ({item}) => <Text>{item.strCategory}</Text>;
+  const renderRecipe = ({item}) => {
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          navigation.navigate('MealsScreen', {strCategory: item.strCategory});
+        }}>
+        <Text>{item.strCategory}</Text>
+      </TouchableWithoutFeedback>
+    );
+  };
 
   return (
     <SafeAreaView>
-      <Text>Home</Text>
       <FlatList
         data={data}
         renderItem={renderRecipe}
