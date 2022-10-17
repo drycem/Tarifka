@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {
-  FlatList,
-  Text,
-  SafeAreaView,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
+
+import ItemCategory from '../components/ItemCategory/ItemCategory';
 
 export default function Home({navigation}) {
   const [data, setData] = useState(null);
@@ -21,19 +18,12 @@ export default function Home({navigation}) {
     fetchCategories();
   }, []);
 
-  const renderRecipe = ({item}) => {
-    return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigation.navigate('MealsScreen', {strCategory: item.strCategory});
-        }}>
-        <Text>{item.strCategory}</Text>
-      </TouchableWithoutFeedback>
-    );
-  };
+  const renderRecipe = ({item}) => (
+    <ItemCategory item={item} navigation={navigation} />
+  );
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={data}
         renderItem={renderRecipe}
@@ -42,3 +32,10 @@ export default function Home({navigation}) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'orange',
+    flex: 1,
+  },
+});

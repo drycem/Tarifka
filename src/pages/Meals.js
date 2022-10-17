@@ -1,17 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, TouchableWithoutFeedback} from 'react-native';
+import {View, StyleSheet, FlatList} from 'react-native';
+
+import ItemMeal from '../components/ItemMeal/ItemMeal';
 
 export default ({route, navigation}) => {
   const {strCategory} = route.params;
   const [data, setData] = useState(null);
 
   const renderMeals = ({item}) => (
-    <TouchableWithoutFeedback
-      onPress={() =>
-        navigation.navigate('DetailScreen', {mealId: item.idMeal})
-      }>
-      <Text>{item.strMeal}</Text>
-    </TouchableWithoutFeedback>
+    <ItemMeal item={item} navigation={navigation} />
   );
 
   useEffect(() => {
@@ -36,7 +33,7 @@ export default ({route, navigation}) => {
   }, [strCategory]);
 
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
         data={data}
         renderItem={renderMeals}
@@ -45,3 +42,9 @@ export default ({route, navigation}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'orange',
+  },
+});

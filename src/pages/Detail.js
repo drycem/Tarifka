@@ -1,5 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Linking,
+  Alert,
+  Button,
+} from 'react-native';
 
 const Detail = ({route, navigation}) => {
   const {mealId} = route.params;
@@ -28,6 +36,28 @@ const Detail = ({route, navigation}) => {
     fetchDetail();
   }, [mealId]);
 
+  const OpenYoutubeButton = ({url, children}) => {
+    const handlePress = useCallback(async () => {
+      let supported = null;
+      try {
+        console.log(url);
+        supported = await Linking.canOpenURL(url);
+      } catch {
+        error => {
+          console.log(error);
+        };
+      }
+
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert(`Failed to open this URL:\n${url}`);
+      }
+    }, [url]);
+
+    return <Button title={children} onPress={handlePress} />;
+  };
+
   try {
     return (
       <View>
@@ -40,6 +70,9 @@ const Detail = ({route, navigation}) => {
           />
         ) : undefined}
         <Text>{data.strMeal}</Text>
+        <OpenYoutubeButton url={data.strYoutube}>
+          Watch on Youtube
+        </OpenYoutubeButton>
       </View>
     );
   } catch (error) {
@@ -57,6 +90,9 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     resizeMode: 'contain',
+  },
+  container: {
+    backgroundColor: '#f5f5f5',
   },
 });
 
