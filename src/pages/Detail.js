@@ -6,7 +6,9 @@ import {
   StyleSheet,
   Linking,
   Alert,
-  Button,
+  Dimensions,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 
 const Detail = ({route, navigation}) => {
@@ -25,22 +27,20 @@ const Detail = ({route, navigation}) => {
         .then(res => res.json())
         .then(s => {
           const {meals} = s;
-          console.log(meals[0]);
           setData(meals[0]);
         })
-        .catch(err => {
-          console.log(err);
+        .catch(error => {
+          console.log(error);
         });
     };
 
     fetchDetail();
   }, [mealId]);
 
-  const OpenYoutubeButton = ({url, children}) => {
+  const OpenYoutubeButton = ({url}) => {
     const handlePress = useCallback(async () => {
       let supported = null;
       try {
-        console.log(url);
         supported = await Linking.canOpenURL(url);
       } catch {
         error => {
@@ -55,24 +55,30 @@ const Detail = ({route, navigation}) => {
       }
     }, [url]);
 
-    return <Button title={children} onPress={handlePress} />;
+    return (
+      <TouchableOpacity style={styles.btn} onPress={handlePress}>
+        <Text style={styles.btn_text}>Watch on Youtube</Text>
+      </TouchableOpacity>
+    );
   };
 
   try {
     return (
-      <View>
-        {data && data.strMealThumb ? (
-          <Image
-            style={styles.img}
-            source={{
-              uri: data.strMealThumb,
-            }}
-          />
-        ) : undefined}
-        <Text>{data.strMeal}</Text>
-        <OpenYoutubeButton url={data.strYoutube}>
-          Watch on Youtube
-        </OpenYoutubeButton>
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollContainer}>
+          {data && data.strMealThumb ? (
+            <Image
+              style={styles.img}
+              source={{
+                uri: data.strMealThumb,
+              }}
+            />
+          ) : undefined}
+          <Text style={styles.title}>{data.strMeal}</Text>
+          <Text style={styles.area}>{data.strArea}</Text>
+          <Text style={styles.info}>{data.strInstructions}</Text>
+        </ScrollView>
+        <OpenYoutubeButton url={data.strYoutube} />
       </View>
     );
   } catch (error) {
@@ -87,12 +93,48 @@ const Detail = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   img: {
-    width: 300,
-    height: 300,
+    width: Dimensions.get('window').width,
+    height: 380,
     resizeMode: 'contain',
   },
   container: {
     backgroundColor: '#f5f5f5',
+    flex: 1,
+  },
+  scrollContainer: {
+    flex: 1,
+    marginBottom: 5,
+  },
+  title: {
+    color: '#c62828',
+    fontSize: 34,
+    fontWeight: 'bold',
+    margin: 5,
+  },
+  area: {
+    color: '#c62828',
+    fontSize: 24,
+    fontWeight: 'bold',
+    margin: 5,
+  },
+  info: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    margin: 5,
+  },
+  btn: {
+    backgroundColor: 'red',
+    color: 'white',
+    marginHorizontal: 10,
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 5,
+  },
+  btn_text: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

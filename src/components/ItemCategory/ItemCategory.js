@@ -4,7 +4,6 @@ import {TouchableWithoutFeedback, Text, View, Image} from 'react-native';
 import styles from './ItemCategory.style';
 
 export default ({item, navigation}) => {
-  console.log(item.strCategoryThumb);
   return (
     <View style={styles.container}>
       <Image style={styles.img} source={{uri: item.strCategoryThumb}} />

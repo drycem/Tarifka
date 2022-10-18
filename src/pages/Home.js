@@ -7,10 +7,16 @@ export default function Home({navigation}) {
   const [data, setData] = useState(null);
 
   const fetchCategories = async () => {
-    fetch('https://www.themealdb.com/api/json/v1/1/categories.php')
+    const url = new URL(
+      'https://www.themealdb.com/api/json/v1/1/categories.php',
+    );
+    fetch(url)
       .then(res => res.json())
       .then(({categories}) => {
         setData(categories);
+      })
+      .catch(error => {
+        console.log(error);
       });
   };
 
